@@ -45,7 +45,7 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input type='email' {...field} />
               </FormControl>
               <FormDescription>This is your account email.</FormDescription>
               <FormMessage />
