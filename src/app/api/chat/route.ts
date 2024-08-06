@@ -12,7 +12,6 @@ export async function POST(req: NextRequest) {
     model: "gpt-4o", // Specify the model to use
     stream: true, // Enable streaming responses
   });
-  console.log([{ role: "system", content: systemPrompt }, ...body]);
   // Create a ReadableStream to handle the streaming response
   const stream = new ReadableStream({
     async start(controller) {

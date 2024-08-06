@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
@@ -77,20 +77,38 @@ export default function Chat({ className }: { className?: String }) {
     }
   };
 
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (!messagesEndRef || !messagesEndRef.current) {
+      return;
+    }
+    (messagesEndRef.current as HTMLElement).scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
     // message box
     <div
-      className={cn("size-full p-4 flex flex-col justify-between", className)}>
+      className={cn(
+        "size-full px-4 py-6 flex flex-col justify-between",
+        className
+      )}>
       {/* messages */}
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-2 h-full'>
         {messages.map((message, index) => (
           <div
             key={index}
             className={cn(
               "py-2 px-4 rounded-lg inline-block max-w-[80%] break-words",
               message.role === "assistant"
-                ? "bg-primary/80 text-white self-start"
-                : "bg-accent text-foreground self-end"
+                ? "bg-primary/80 text-secondary self-start"
+                : "bg-accent text-primary self-end"
             )}>
             {message.content}
           </div>
