@@ -16,7 +16,7 @@ export async function login(data: login) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/account");
+  redirect("/dashboard/account");
 }
 
 export async function signup(data: signup) {
@@ -29,5 +29,26 @@ export async function signup(data: signup) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/account");
+  redirect("/dashboard/account");
+}
+
+export async function signInWithGithub() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: {
+      redirectTo: "http://localhost:3000/api/auth/callback?next=/dashboard",
+    },
+  });
+
+  if (data.url) {
+    redirect(data.url); // use the redirect API for your server framework
+  }
+}
+
+export async function signOut() {
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.signOut();
 }

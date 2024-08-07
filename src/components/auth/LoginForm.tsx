@@ -15,14 +15,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { login } from "@/actions/auth";
+import { login, signInWithGithub } from "@/actions/auth";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 });
 
-export default function LoginForm() {
+export default function LoginForm({ className }: { className?: string }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,38 +38,49 @@ export default function LoginForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type='email' {...field} />
-              </FormControl>
-              <FormDescription>This is your account email.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type='password' {...field} />
-              </FormControl>
-              <FormDescription>This is your password.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type='submit'>Submit</Button>
-      </form>
-    </Form>
+    <div className={cn("flex flex-col gap-6", className)}>
+      <Form {...form}>
+        <Button onClick={() => signInWithGithub()} className='w-full'>
+          Github
+        </Button>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex flex-col gap-6'>
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type='email' placeholder='user@email.com' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type='password' placeholder='abc123' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type='submit'>Login</Button>
+          <p>
+            Don{"'"}t have an account?{" "}
+            <Link href='/signup' className='font-medium text-blue-500'>
+              Sign up here.
+            </Link>
+          </p>
+        </form>
+      </Form>
+    </div>
   );
 }

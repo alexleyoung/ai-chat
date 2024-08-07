@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Chat({ className }: { className?: String }) {
   const [messages, setMessages] = useState([
@@ -96,18 +97,18 @@ export default function Chat({ className }: { className?: String }) {
     // message box
     <div
       className={cn(
-        "size-full px-4 py-6 flex flex-col justify-between",
+        "size-full px-4 py-6 flex flex-col justify-between gap-4",
         className
       )}>
       {/* messages */}
-      <div className='flex flex-col gap-2 h-full'>
+      <div className='flex flex-col gap-4 h-full overflow-scroll'>
         {messages.map((message, index) => (
           <div
             key={index}
             className={cn(
-              "py-2 px-4 rounded-lg inline-block max-w-[80%] break-words",
+              "py-2 px-4 rounded-lg inline-block max-w-[70%] break-words",
               message.role === "assistant"
-                ? "bg-primary/80 text-secondary self-start"
+                ? "bg-primary/80 text-primary-foreground self-start"
                 : "bg-accent text-primary self-end"
             )}>
             {message.content}
@@ -115,11 +116,11 @@ export default function Chat({ className }: { className?: String }) {
         ))}
       </div>
       {/* message input */}
-      <div className='flex gap-2 bg-accent'>
+      <div className='flex gap-2'>
         <Input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className='w-full'
+          className='w-full rounded-md bg-accent'
           onKeyDown={handleKeyPress}
           placeholder='Send message...'
         />

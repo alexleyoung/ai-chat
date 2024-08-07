@@ -17,7 +17,7 @@ export default function AccountForm({ user }: { user: User | null }) {
 
       const { data, error, status } = await supabase
         .from("profiles")
-        .select(`full_name, username, website, avatar_url`)
+        .select(`*`)
         .eq("id", user?.id)
         .single();
 
@@ -119,7 +119,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       </div>
 
       <div>
-        <form action='/auth/signout' method='post'>
+        <form action='/api/auth/signout' method='post'>
           <button className='button block' type='submit'>
             Sign out
           </button>

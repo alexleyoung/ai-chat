@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signup } from "@/actions/auth";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -27,7 +29,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function SignupForm() {
+export default function SignupForm({ className }: { className?: string }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,7 +45,9 @@ export default function SignupForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("flex flex-col gap-4", className)}>
         <FormField
           control={form.control}
           name='email'
@@ -53,7 +57,6 @@ export default function SignupForm() {
               <FormControl>
                 <Input type='email' {...field} />
               </FormControl>
-              <FormDescription>This is your account email.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -67,7 +70,6 @@ export default function SignupForm() {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription>This is your account email.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -81,12 +83,17 @@ export default function SignupForm() {
               <FormControl>
                 <Input type='password' {...field} />
               </FormControl>
-              <FormDescription>This is your password.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type='submit'>Submit</Button>
+        <Button type='submit'>Sign Up</Button>
+        <p>
+          Already have an account?{" "}
+          <Link href='/login' className='font-medium text-blue-500'>
+            Login here.
+          </Link>
+        </p>
       </form>
     </Form>
   );

@@ -1,5 +1,5 @@
 import Chat from "@/components/Chat";
 
 export default function Home() {
-  return <Chat className='h-screen' />;
+  return <div>hello</div>;
 }
