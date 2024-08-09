@@ -7,11 +7,17 @@ import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
-export default function Chat({ className }: { className?: String }) {
+export default function Chat({
+  className,
+  defaultMessage = "Hi! I'm your personal assistant. How can I help you today?",
+}: {
+  className?: String;
+  defaultMessage?: String;
+}) {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hi! I'm your personal assistant. How can I help you today?",
+      content: defaultMessage,
     },
   ]);
   const [message, setMessage] = useState("");
@@ -96,12 +102,9 @@ export default function Chat({ className }: { className?: String }) {
   return (
     // message box
     <div
-      className={cn(
-        "size-full px-4 py-6 flex flex-col justify-between gap-4",
-        className
-      )}>
+      className={cn("size-full p-8 flex flex-col justify-between", className)}>
       {/* messages */}
-      <div className='flex flex-col gap-4 h-full overflow-scroll'>
+      <div className='flex flex-col gap-10 h-full overflow-scroll px-8'>
         {messages.map((message, index) => (
           <div
             key={index}
@@ -116,11 +119,11 @@ export default function Chat({ className }: { className?: String }) {
         ))}
       </div>
       {/* message input */}
-      <div className='flex gap-2'>
+      <div className='flex gap-4 justify-center items-center'>
         <Input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className='w-full rounded-md bg-accent'
+          className='rounded-md bg-accent'
           onKeyDown={handleKeyPress}
           placeholder='Send message...'
         />

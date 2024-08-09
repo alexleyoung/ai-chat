@@ -1,19 +1,52 @@
-import Chat from "@/components/Chat";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+"use client";
+
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
 
-import ThemeToggle from "@/components/ThemeToggle";
+export default function Dashboard() {
+  const [userId, setUserId] = useState("");
+  const [sessions, setSessions] =
+    useState<Database["public"]["Tables"]["chat_sessions"]["Row"][]>();
 
-export default async function Dashboard() {
-  const supabase = createClient();
+  useEffect(() => {
+    (async () => {
+      const supabase = createClient();
+
+      // get user id
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        return;
+      }
+      setUserId(user.id);
+
+      // get user sessions
+      const { data, error } = await supabase
+        .from("chat_sessions")
+        .select()
+        .eq("user_id", user.id);
+      data && setSessions(data);
+    })();
+  }, []);
 
   return (
-    <section className='flex'>
-      <aside className='fixed w-96 h-screen bg-accent p-8'>
-        <ThemeToggle />
-      </aside>
-      <Chat className='h-screen ml-96' />
+    <section className='ml-96 grid place-items-center h-screen w-full'>
+      <Button
+        onClick={async () => {
+          const supabase = createClient();
+          const { data, error } = await supabase
+            .from("chat_sessions")
+            .insert([{ user_id: userId, session_name: "New Chat" }]);
+          if (error) {
+            console.error(error);
+            return null;
+          }
+          console.log(data);
+        }}>
+        start a new chat
+      </Button>
     </section>
   );
 }
