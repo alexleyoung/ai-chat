@@ -1,32 +1,45 @@
+"use client";
+
 import Chat from "@/components/Chat";
-import { createClient } from "@/utils/supabase/server";
 
-type ChatSessionProps = { params: { slug: string }; userId: string };
+import { createClient } from "@/utils/supabase/client";
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
-export async function generateStaticParams(userId: string) {
-  const supabase = createClient();
+const ChatSession = () => {
+  const [messages, setMessages] =
+    useState<Database["public"]["Tables"]["messages"]["Row"][]>();
+  const [session, setSession] =
+    useState<Database["public"]["Tables"]["chat_sessions"]["Row"]>();
 
-  const { data, error } = await supabase
-    .from("chat_sessions")
-    .select("id")
-    .eq("user_id", userId);
+  // get the pathname for session ID
+  const pathname = usePathname();
 
-  return data?.map((session) => ({ params: { slug: session.id } }));
-}
+  // fetch session by ID
+  const getSession = async () => {
+    const supabase = createClient();
+    const sessionId = pathname.split("/")[2];
+    const { data, error } = await supabase
+      .from("chat_sessions")
+      .select()
+      .eq("id", sessionId);
 
-const ChatSession = async ({ params }: ChatSessionProps) => {
-  const supabase = createClient();
+    if (error) {
+      console.error(error);
+      return null;
+    }
+    setSession(() => data[0]);
+  };
 
-  const sessionId = params.slug;
-  console.log(sessionId);
+  useEffect(() => {
+    getSession();
+  }, []);
 
-  const { data, error } = await supabase
-    .from("chat_sessions")
-    .select()
-    .eq("user_id", 1)
-    .eq("id", sessionId);
-
-  return <Chat className='ml-96 h-screen' />;
+  return (
+    <div className='ml-96 h-screen w-full'>
+      <Chat />
+    </div>
+  );
 };
 
 export default ChatSession;
