@@ -1,31 +1,43 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, messageRowToMessages } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
+type Message = {
+  role: string;
+  content: String | null;
+};
+
 export default function Chat({
   className,
-  defaultMessage = "Hi! I'm your personal assistant. How can I help you today?",
+  sessionMessages,
+  sessionId,
 }: {
   className?: String;
-  defaultMessage?: String;
+  sessionMessages?: Database["public"]["Tables"]["messages"]["Row"][];
+  sessionId: String;
 }) {
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: defaultMessage,
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(
+    messageRowToMessages(sessionMessages || [])
+  );
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const messagesRef = useRef(messages);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!message.trim()) return; // Don't send empty messages
     setIsLoading(true);
+
+    const supabase = createClient();
 
     setMessage("");
     setMessages((messages) => [
@@ -33,6 +45,12 @@ export default function Chat({
       { role: "user", content: message },
       { role: "assistant", content: "" },
     ]);
+    // insert user message into DB
+    await supabase.from("messages").insert({
+      session_id: sessionId,
+      sender: "user",
+      content: message,
+    });
 
     try {
       const response = await fetch("/api/chat", {
@@ -63,6 +81,12 @@ export default function Chat({
           ];
         });
       }
+      // insert ai message into DB
+      await supabase.from("messages").insert({
+        session_id: sessionId,
+        sender: "assistant",
+        content: messagesRef.current.at(-1)?.content || "",
+      });
       setIsLoading(false);
     } catch (error) {
       console.error("Error:", error);
