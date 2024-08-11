@@ -1,9 +1,13 @@
 "use client";
 
+import DesktopAside from "@/components/dashboard/DesktopAside";
+import MobileAside from "@/components/dashboard/MobileAside";
+
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
-import DesktopAside from "@/components/dashboard/DesktopAside";
 import { useRouter } from "next/navigation";
+
+const MAX_LENGTH = 27;
 
 const Aside = ({ className }: { className: string }) => {
   const [userId, setUserId] = useState("");
@@ -37,6 +41,14 @@ const Aside = ({ className }: { className: string }) => {
   return (
     <>
       <DesktopAside
+        maxSessionNameLength={MAX_LENGTH}
+        userId={userId}
+        sessions={sessions}
+        router={router}
+        getSessions={getSessions}
+      />
+      <MobileAside
+        maxSessionNameLength={MAX_LENGTH}
         userId={userId}
         sessions={sessions}
         router={router}

@@ -12,19 +12,19 @@ import { createClient } from "@/utils/supabase/client";
 
 const DesktopAside = ({
   className,
+  maxSessionNameLength,
   userId,
   sessions,
   router,
   getSessions,
 }: {
   className?: string;
+  maxSessionNameLength: number;
   userId: string;
   sessions: chatSession[];
   router: AppRouterInstance;
   getSessions: () => void;
 }) => {
-  const MAX_LENGTH = 27;
-
   return (
     <aside
       className={cn(
@@ -63,8 +63,8 @@ const DesktopAside = ({
               <Link
                 href={`/dashboard/${session.id}`}
                 className='w-full rounded-md p-2 hover:bg-primary/5 transition duration-300 ease-in-out transform hover:scale-105'>
-                {session.session_name.length > MAX_LENGTH
-                  ? session.session_name.slice(0, MAX_LENGTH) + "..."
+                {session.session_name.length > maxSessionNameLength
+                  ? session.session_name.slice(0, maxSessionNameLength) + "..."
                   : session.session_name}
               </Link>
               <div className='flex'>
@@ -90,7 +90,7 @@ const DesktopAside = ({
         <Button
           onClick={() => {
             signOut();
-            router.push("/");
+            router.push("/login");
           }}>
           Sign Out
         </Button>
