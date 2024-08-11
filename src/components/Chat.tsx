@@ -142,7 +142,7 @@ export default function Chat({
     <div
       className={cn("size-full p-8 flex flex-col justify-between", className)}>
       {/* messages */}
-      <div className='flex flex-col gap-10 h-full overflow-scroll px-8'>
+      <div className='flex flex-col gap-10 h-full overflow-y-auto overflow-x-hidden px-8'>
         {messages.map((message, index) => (
           <div
             key={index}
@@ -150,7 +150,8 @@ export default function Chat({
               "py-2 px-4 rounded-lg inline-block max-w-[70%] break-words",
               message.role === "assistant"
                 ? "bg-primary/80 text-primary-foreground self-start"
-                : "bg-accent text-primary self-end"
+                : "bg-accent text-primary self-end",
+              index === Number(messages.length - 1) ? "mb-12" : ""
             )}>
             {message.content}
           </div>
