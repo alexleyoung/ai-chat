@@ -12,11 +12,11 @@ export async function login(data: login) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    redirect("/error");
+    console.error(error);
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard/account");
+  redirect("/dashboard");
 }
 
 export async function signup(data: signup) {
@@ -51,4 +51,8 @@ export async function signOut() {
   const supabase = createClient();
 
   const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error(error);
+  }
 }

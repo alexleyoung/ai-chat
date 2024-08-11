@@ -8,7 +8,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className='flex'>
       <Aside />
-      {children}
+      <main className='ml-96 w-full'>{children}</main>
     </div>
   );
 };

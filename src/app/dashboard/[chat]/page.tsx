@@ -54,7 +54,7 @@ const ChatSession = () => {
   }, []);
 
   return (
-    <div className='ml-96 h-screen w-full'>
+    <div className='h-screen w-full'>
       <Chat sessionMessages={messages} sessionId={sessionId} />
     </div>
   );

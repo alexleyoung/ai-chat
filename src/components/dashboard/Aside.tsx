@@ -1,16 +1,20 @@
 "use client";
 
+import { signOut } from "@/actions/auth";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Aside = () => {
   const [userId, setUserId] = useState("");
   const [sessions, setSessions] =
     useState<Database["public"]["Tables"]["chat_sessions"]["Row"][]>();
+
+  const router = useRouter();
 
   const getSessions = async () => {
     const supabase = createClient();
@@ -62,7 +66,16 @@ const Aside = () => {
           ))}
         </nav>
       </div>
-      <ThemeToggle />
+      <div className='flex justify-between w-full'>
+        <ThemeToggle />
+        <Button
+          onClick={() => {
+            signOut();
+            router.push("/");
+          }}>
+          Sign Out
+        </Button>
+      </div>
     </aside>
   );
 };
