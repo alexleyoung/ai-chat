@@ -16,6 +16,7 @@ export default function Themetoggle() {
         onClick={
           theme === "light" ? () => setTheme("dark") : () => setTheme("light")
         }
+        checked={theme === "dark"}
       />
       <Label htmlFor='toggle-theme'>Toggle Theme</Label>
     </div>
