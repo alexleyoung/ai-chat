@@ -76,9 +76,10 @@ const Aside = ({ className }: { className: string }) => {
         </div>
         <nav className='flex flex-col gap-4'>
           {sessions?.map((session) => (
-            <div className='flex justify-between items-center gap-2'>
+            <div
+              key={session.id}
+              className='flex justify-between items-center gap-2'>
               <Link
-                key={session.id}
                 href={`/dashboard/${session.id}`}
                 className='w-full rounded-md p-2 hover:bg-primary/5 transition duration-300 ease-in-out transform hover:scale-105'>
                 {session.session_name.length > MAX_LENGTH

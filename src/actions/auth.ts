@@ -4,9 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
-import { login, signup } from "@/lib/types";
+import { loginData, signupData } from "@/lib/types";
 
-export async function login(data: login) {
+export async function login(data: loginData) {
   const supabase = createClient();
 
   const { error } = await supabase.auth.signInWithPassword(data);
@@ -19,7 +19,7 @@ export async function login(data: login) {
   redirect("/dashboard");
 }
 
-export async function signup(data: signup) {
+export async function signup(data: signupData) {
   const supabase = createClient();
 
   const { error } = await supabase.auth.signUp(data);
