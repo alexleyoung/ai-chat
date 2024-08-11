@@ -42,25 +42,32 @@ const Aside = () => {
 
   return (
     <aside className='fixed w-96 h-screen bg-accent p-8 flex flex-col justify-between items-start'>
-      <div className='flex flex-col items-center gap-8'>
-        <h2 className='text-primary text-2xl'>Chats</h2>
-        <Button
-          onClick={async () => {
-            const supabase = createClient();
-            const { data, error } = await supabase
-              .from("chat_sessions")
-              .insert([{ user_id: userId, session_name: "New Chat" }]);
-            if (error) {
-              console.error(error);
-              return null;
-            }
-            getSessions();
-          }}>
-          start a new chat
-        </Button>
+      <div className='flex flex-col items-left gap-8'>
+        <div className='flex flex-row items-center gap-24'>
+          <h1
+            className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+            <Link href="/dashboard">Chats</Link>
+          </h1>
+          <Button
+            onClick={async () => {
+              const supabase = createClient();
+              const { data, error } = await supabase
+                .from("chat_sessions")
+                .insert([{ user_id: userId, session_name: "New Chat" }]);
+              if (error) {
+                console.error(error);
+                return null;
+              }
+              getSessions();
+            }}
+            className="transition duration-300 ease-in-out hover:bg-blue-500">
+            New Chat
+          </Button>
+        </div>
         <nav className='flex flex-col gap-4'>
           {sessions?.map((session) => (
-            <Link key={session.id} href={`/dashboard/${session.id}`}>
+            <Link key={session.id} href={`/dashboard/${session.id}`}   
+              className="transition duration-300 ease-in-out transform hover:scale-105 hover:text-gray-500">
               {session.session_name}
             </Link>
           ))}
