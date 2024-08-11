@@ -33,7 +33,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         setAvatarUrl(data.avatar_url);
       }
     } catch (error) {
-      alert("Error loading user data!");
+      console.log(error);
     } finally {
       setLoading(false);
     }

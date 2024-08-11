@@ -3,13 +3,14 @@
 import { signOut } from "@/actions/auth";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Aside = () => {
+const Aside = ({ className }: { className: string }) => {
   const [userId, setUserId] = useState("");
   const [sessions, setSessions] =
     useState<Database["public"]["Tables"]["chat_sessions"]["Row"][]>();
@@ -41,12 +42,15 @@ const Aside = () => {
   }, [sessions]);
 
   return (
-    <aside className='fixed w-96 h-screen bg-accent p-8 flex flex-col justify-between items-start'>
+    <aside
+      className={cn(
+        "fixed h-screen bg-accent p-8 flex flex-col justify-between items-start",
+        className
+      )}>
       <div className='flex flex-col items-left gap-8'>
         <div className='flex flex-row items-center gap-24'>
-          <h1
-            className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-            <Link href="/dashboard">Chats</Link>
+          <h1 className='text-4xl font-extrabold tracking-tight lg:text-5xl'>
+            <Link href='/dashboard'>Chats</Link>
           </h1>
           <Button
             onClick={async () => {
@@ -60,14 +64,16 @@ const Aside = () => {
               }
               getSessions();
             }}
-            className="transition duration-300 ease-in-out hover:bg-blue-500">
+            className='transition duration-300 ease-in-out hover:bg-blue-500'>
             New Chat
           </Button>
         </div>
         <nav className='flex flex-col gap-4'>
           {sessions?.map((session) => (
-            <Link key={session.id} href={`/dashboard/${session.id}`}   
-              className="transition duration-300 ease-in-out transform hover:scale-105 hover:text-gray-500">
+            <Link
+              key={session.id}
+              href={`/dashboard/${session.id}`}
+              className='transition duration-300 ease-in-out transform hover:scale-105 hover:text-gray-500'>
               {session.session_name}
             </Link>
           ))}
