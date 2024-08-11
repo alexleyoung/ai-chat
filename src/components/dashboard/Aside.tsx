@@ -96,7 +96,7 @@ const Aside = ({ className }: { className: string }) => {
                       .eq("id", session.id);
                     getSessions();
                   }}>
-                  <Trash className='hover:text-blue-500' />
+                  <Trash className='hover:text-blue-500 transition-colors' />
                 </Button>
               </div>
             </div>
