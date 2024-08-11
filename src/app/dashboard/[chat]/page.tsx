@@ -1,12 +1,10 @@
 "use client";
 
 import Chat from "@/components/Chat";
-import { messageRowToMessages } from "@/lib/utils";
 
 import { createClient } from "@/utils/supabase/client";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { set } from "react-hook-form";
 
 const ChatSession = () => {
   const [messages, setMessages] =

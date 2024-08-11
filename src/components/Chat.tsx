@@ -21,11 +21,15 @@ export default function Chat({
   sessionMessages?: Database["public"]["Tables"]["messages"]["Row"][];
   sessionId: String;
 }) {
-  const [messages, setMessages] = useState<Message[]>(
-    messageRowToMessages(sessionMessages || [])
-  );
+  const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (sessionMessages) {
+      setMessages(messageRowToMessages(sessionMessages));
+    }
+  }, [sessionMessages]);
 
   const messagesRef = useRef(messages);
 

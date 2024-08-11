@@ -6,13 +6,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function messageRowToMessages(
-  messageRow: Database["public"]["Tables"]["messages"]["Row"][]
+  messageRow?: Database["public"]["Tables"]["messages"]["Row"][]
 ) {
   type Message = {
     role: string;
     content: String | null;
   };
   let res: Message[] = [];
+
+  if (!messageRow) return res;
 
   messageRow.forEach((message) => {
     res.push({
