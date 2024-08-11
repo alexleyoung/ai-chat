@@ -6,9 +6,12 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import { createClient } from "@/utils/supabase/client";
+import { Edit, Trash } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const MAX_LENGTH = 27;
 
 const Aside = ({ className }: { className: string }) => {
   const [userId, setUserId] = useState("");
@@ -57,12 +60,15 @@ const Aside = ({ className }: { className: string }) => {
               const supabase = createClient();
               const { data, error } = await supabase
                 .from("chat_sessions")
-                .insert([{ user_id: userId, session_name: "New Chat" }]);
+                .insert([{ user_id: userId, session_name: "New Chat" }])
+                .select();
+
               if (error) {
                 console.error(error);
                 return null;
               }
               getSessions();
+              router.push(`/dashboard/${data[0].id}`);
             }}
             className='transition duration-300 ease-in-out hover:bg-blue-500'>
             New Chat
@@ -70,12 +76,30 @@ const Aside = ({ className }: { className: string }) => {
         </div>
         <nav className='flex flex-col gap-4'>
           {sessions?.map((session) => (
-            <Link
-              key={session.id}
-              href={`/dashboard/${session.id}`}
-              className='transition duration-300 ease-in-out transform hover:scale-105 hover:text-gray-500'>
-              {session.session_name}
-            </Link>
+            <div className='flex justify-between items-center gap-2'>
+              <Link
+                key={session.id}
+                href={`/dashboard/${session.id}`}
+                className='w-full rounded-md p-2 hover:bg-primary/5 transition duration-300 ease-in-out transform hover:scale-105'>
+                {session.session_name.length > MAX_LENGTH
+                  ? session.session_name.slice(0, MAX_LENGTH) + "..."
+                  : session.session_name}
+              </Link>
+              <div className='flex'>
+                <Button
+                  variant='ghost'
+                  onClick={async () => {
+                    const supabase = createClient();
+                    await supabase
+                      .from("chat_sessions")
+                      .delete()
+                      .eq("id", session.id);
+                    getSessions();
+                  }}>
+                  <Trash className='hover:text-blue-500' />
+                </Button>
+              </div>
+            </div>
           ))}
         </nav>
       </div>

@@ -40,8 +40,18 @@ export default function Chat({
   const sendMessage = async () => {
     if (!message.trim()) return; // Don't send empty messages
     setIsLoading(true);
-
     const supabase = createClient();
+
+    if (messages.length === 0) {
+      console.log("hello");
+      const { error } = await supabase
+        .from("chat_sessions")
+        .update({ session_name: message })
+        .eq("id", sessionId);
+      if (error) {
+        console.error(error);
+      }
+    }
 
     setMessage("");
     setMessages((messages) => [

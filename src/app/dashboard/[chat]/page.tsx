@@ -5,6 +5,7 @@ import Chat from "@/components/Chat";
 import { createClient } from "@/utils/supabase/client";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const ChatSession = () => {
   const [messages, setMessages] =
@@ -13,6 +14,8 @@ const ChatSession = () => {
     useState<Database["public"]["Tables"]["chat_sessions"]["Row"]>();
   const [sessionId, setSessionId] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
 
   // get the pathname for session ID
   const pathname = usePathname();
@@ -28,10 +31,12 @@ const ChatSession = () => {
       .select()
       .eq("id", sessionId);
 
-    if (error) {
-      console.error(error);
+    if (error || data.length === 0) {
+      console.error("err");
+      router.push("/dashboard");
       return null;
     }
+
     setSession(() => data[0]);
 
     // fetch messages
