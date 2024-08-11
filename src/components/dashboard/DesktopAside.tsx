@@ -86,7 +86,7 @@ const DesktopAside = ({
         </nav>
       </div>
       <div className='flex justify-between w-full'>
-        <ThemeToggle />
+        <ThemeToggle variant='desktop' />
         <Button
           onClick={() => {
             signOut();

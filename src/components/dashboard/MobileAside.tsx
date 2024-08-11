@@ -15,6 +15,7 @@ import Link from "next/link";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { createClient } from "@/utils/supabase/client";
 import { signOut } from "@/actions/auth";
+import Themetoggle from "../ThemeToggle";
 
 const MobileAside = ({
   className,
@@ -37,7 +38,9 @@ const MobileAside = ({
         <SheetTrigger>
           <Menu />
         </SheetTrigger>
-        <SheetContent side='left' className='border-accent'>
+        <SheetContent
+          side='left'
+          className='border-accent h-full border flex flex-col justify-between'>
           <SheetHeader>
             <SheetTitle>
               <Link href='/dashboard'>Chatbot</Link>
@@ -75,15 +78,20 @@ const MobileAside = ({
               </nav>
             </SheetDescription>
           </SheetHeader>
+          <div className='flex gap-4 justify-between items-center'>
+            <Themetoggle variant='desktop' />
+            <p className='flex gap-2'>
+              Sign Out
+              <LogOut
+                onClick={() => {
+                  signOut();
+                  router.push("/login");
+                }}
+              />
+            </p>
+          </div>
         </SheetContent>
       </Sheet>
-
-      <LogOut
-        onClick={() => {
-          signOut();
-          router.push("/login");
-        }}
-      />
     </aside>
   );
 };
