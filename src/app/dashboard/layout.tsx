@@ -6,9 +6,9 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className='flex'>
-      <Aside className='w-96' />
-      <main className='ml-96 w-full'>{children}</main>
+    <div className='flex overflow-hidden'>
+      <Aside className='' />
+      <main className='w-full'>{children}</main>
     </div>
   );
 };
