@@ -29,7 +29,7 @@ export async function signup(data: signupData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard/account");
+  redirect("/dashboard/");
 }
 
 export async function signInWithGithub() {
