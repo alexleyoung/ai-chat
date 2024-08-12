@@ -33,12 +33,17 @@ export async function signup(data: signupData) {
 }
 
 export async function signInWithGithub() {
+  const BASE_URL =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "http://3.144.30.106:3000";
+
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "github",
     options: {
-      redirectTo: "http://localhost:3000/api/auth/callback?next=/dashboard",
+      redirectTo: `${BASE_URL}/api/auth/callback?next=/dashboard`,
     },
   });
 
